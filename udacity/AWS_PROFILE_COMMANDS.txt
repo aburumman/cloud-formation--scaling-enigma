@@ -1,0 +1,13 @@
+aws configure
+
+aws configure list
+
+aws configure list-profiles
+
+aws configure --profile default
+
+aws configure --profile myseocndprofile
+
+export AWS_PROFILE=default
+
+export AWS_PROFILE=mysecondprofile

@@ -1,0 +1,10 @@
+[
+    {
+        "ParameterValue":"My-value",
+        "ParameterKey":"My-key"
+    },
+    {
+        "ParameterValue":"My-second-value",
+        "ParameterKey":"My-second-key"
+    }
+]

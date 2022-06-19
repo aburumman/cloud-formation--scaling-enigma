@@ -1,0 +1,17 @@
+Description:
+  Deploying a network infrastructure with cloud formation
+Resources:
+  myVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16 #!Ref cidr-block
+      EnableDnsHostnames: true
+      # Tags:
+      #   - Key: Name
+      #     Value: !Ref Environment
+  myInternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref IGW

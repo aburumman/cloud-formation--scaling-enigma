@@ -1,0 +1,14 @@
+[
+    {
+        "ParameterValue":"cidr-block",
+        "ParameterKey":"10.0.0.0/16"
+    },
+    {
+        "ParameterValue":"Environment",
+        "ParameterKey":"Test"
+    },
+    {
+        "ParameterValue":"IGW",
+        "ParameterKey":"test-IGW"
+    }
+]

@@ -1,0 +1,9 @@
+Resources:
+  MyS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: My-s3-bucket
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+      

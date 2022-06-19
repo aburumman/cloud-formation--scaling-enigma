@@ -11,8 +11,8 @@ Resources:
             - - "EC2 Instance for"
               - !Ref AWS::Region
       SecurityGroups:
-      - !Ref mtySecrityGrouops
-  mySecurityGroups:
+      - !Ref mySecurityGroup
+  mySecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: Enable SSH

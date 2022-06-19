@@ -1,5 +1,15 @@
 Description:
   Deploying a network infrastructure with cloud formation
+
+Parameters:
+  Environment:
+    Description: An Environment 
+    Type: String
+    Default: "Test"
+  vpcCidrBlock:
+    Description: cidr range for vpc
+    Type: String
+    Default: "10.0.0.0/16"
 Resources:
   myVPC:
     Type: AWS::EC2::VPC
@@ -20,3 +30,23 @@ Resources:
     Properties:
       InternetGatewayId: !Ref myInternetGateway
       VpcId: !Ref myVPC
+  privatesubnet1:
+    Type: AWS::EC2::Subnet 
+    Properties: 
+      VpcId: !Ref myVPC
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: "10.0.2.0/24"
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: Private Subnet1
+  privatesubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref myVPC
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: "10.0.3.0/24"
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: "Privatesubnet2"

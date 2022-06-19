@@ -14,4 +14,9 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: !Ref IGW
+          Value: "IGW"
+  myIGWattachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref myInternetGateway
+      VpcId: !Ref myVPC

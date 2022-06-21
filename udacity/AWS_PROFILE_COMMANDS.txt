@@ -11,3 +11,9 @@ aws configure --profile myseocndprofile
 export AWS_PROFILE=default
 
 export AWS_PROFILE=mysecondprofile
+
+aws cloudformation list-stack
+
+aws cloudformation destroy-stack --stack-name june-stack --template-body file://network.yaml --region us-east-1
+
+aws cloudformation update-stack --stack-name june-stack --template-body file://udacity/network.yaml --region us-east-1

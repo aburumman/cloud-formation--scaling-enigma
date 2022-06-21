@@ -50,3 +50,87 @@ Resources:
       Tags:
         - Key: Name
           Value: "Privatesubnet2"
+  publicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref myVPC
+      AvailabilityZone: !Select [1, !GetAZs '']
+      CidrBlock: "10.0.0.0/24"
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: "public subnet1"
+  publicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref myVPC
+      AvailabilityZone: !Select [0, !GetAZs '']
+      CidrBlock: "10.0.1.0/24"
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: "public Subnet2"
+  NatgatewayEIP1:
+    Type: AWS::EC2::EIP 
+    DependsOn: myIGWattachment
+    Properties:
+      Domain: vpc
+  NatgatewayEIP2:
+    Type: AWS::EC2::EIP
+    DependsOn: myIGWattachment
+    Properties:
+      Domain: vpc
+  Natgateway1:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatgatewayEIP1.AllocationId
+      SubnetId: !Ref publicSubnet1
+
+  Natgateway2:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatgatewayEIP2.AllocationId
+      SubnetId: !Ref publicSubnet2
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties: 
+      VpcId: !Ref myVPC
+      Tags:
+        - Key: "Name"
+          Value: "Public Route Table"
+  DefaultPublicRoute:
+    Type: AWS::EC2::Route 
+    DependsOn: myIGWattachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref myInternetGateway
+
+  PublicSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation 
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref publicSubnet2
+
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2:sunbetRouteTableAssociation
+    Properties:
+      RoutetableId: !Ref PublicRouteTable
+      SubnetId: !Ref publicsubnet1
+
+  PrivateRouteTable1:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref myVPC
+      Tags:
+        - Key: Name
+          Value: "Private route table 1"
+  DefaultPrivateRouteTable:
+    Type: AWS::EC2::RouteTable 
+    Properties:
+      VpcId: !Ref myVPC
+      Tags:
+        - Key: Name
+          Value: "Default Private Route Table"
+
+  

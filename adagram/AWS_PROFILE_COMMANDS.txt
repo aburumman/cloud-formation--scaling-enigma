@@ -1,0 +1,31 @@
+aws configure
+
+aws configure list
+
+aws configure list-profiles
+
+aws configure --profile default
+
+aws configure --profile myseocndprofile
+
+export AWS_PROFILE=default
+
+export AWS_PROFILE=mysecondprofile
+
+aws cloudformation list-stack
+
+aws cloudformation delete-stack --stack-name june-stack 
+
+aws cloudformation update-stack --stack-name june-stack --template-body file://udacity/network.yaml --region us-east-1
+
+aws cloudformation describe-stacks --stack-name myteststack
+
+aws cloudformation describe-stack-events --stack-name my-stack
+
+aws cloudformation list-stack-resources --stack-name myteststack
+
+aws cloudformation get-template --stack-name myteststack
+
+aws cloudformation validate-template --template-url https://s3.amazonaws.com/cloudformation-templates-us-east-1/S3_Bucket.template
+
+aws cloudformation validate-template --template-body file:///home/local/test/sampletemplate.json

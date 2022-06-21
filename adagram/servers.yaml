@@ -1,0 +1,56 @@
+Description:
+  Alayande Mustapha | CF project
+# Parameters:
+#   EnvironmentName: 
+#     Description: An Environment name to be prefixed to the resources
+#     Type: String 
+
+Resources:
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Allow http
+      GroupName: String
+      SecurityGroupEgress: 
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        
+      Tags: 
+        - Tag
+      VpcId: 
+        vpc-0529fc9cbbcdfe12e
+        # Fn::ImportValue:
+        #   !Sub "${EnvironmentName}-VPCID"
+        #Ref: myVPC
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Allow SSH and egress
+      GroupName: String
+      SecurityGroupEgress: 
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: -1
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp 
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+          
+      VpcId: 
+        vpc-0529fc9cbbcdfe12e
+        # Fn::ImportValue:
+        #   !Sub "${EnvironmentName}-VPCID"

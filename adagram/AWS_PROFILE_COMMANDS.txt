@@ -12,7 +12,7 @@ export AWS_PROFILE=default
 
 export AWS_PROFILE=mysecondprofile
 
-aws cloudformation list-stack
+aws cloudformation list-stacks
 
 aws cloudformation delete-stack --stack-name june-stack 
 

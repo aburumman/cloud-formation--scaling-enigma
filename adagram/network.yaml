@@ -160,6 +160,100 @@ Resources:
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref Natgateway2
 
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Allow http
+      GroupName: InstanceSecurityGroup
+      SecurityGroupEgress: 
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+    # Tags: 
+    #   - Tag
+      VpcId: 
+        vpc-0529fc9cbbcdfe12e
+      # Fn::ImportValue:
+      #   !Sub "${EnvironmentName}-VPCID"
+      #Ref: myVPC
+  WebServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Allow SSH and egress
+      GroupName: WebServerSecrityGroup
+      SecurityGroupEgress: 
+        - IpProtocol: tcp
+          FromPort: 0
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp 
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      VpcId: 
+        vpc-0529fc9cbbcdfe12e
+        # Fn::ImportValue:
+        #   !Sub "${EnvironmentName}-VPCID"
+
+
+  WebAppGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      VPCZoneIdentifier: !Ref Subnets
+      # - Fn::ImportValue:
+      #     !Sub "${EnvironmentName}-PrivateNets"
+      # LaunchTemplate:
+      #   LaunchTemplateId: !Ref myLaunchTemplate
+      #   Version: !GetAtt myLaunchTemplate.LatestVersionNumber
+      LaunchConfigurationName:
+        Ref: WebAppLaunchConfig
+      MinSize: '2'
+      MaxSize: '4'
+      TargetGroupARNs:
+      - Ref: WebAppTargetGroup
+      HealthCheckGracePeriod: 60
+      HealthCheckType: ELB
+
+# myLaunchTemplate:
+#   Type: AWS::EC2::LaunchTemplate
+#   Properties: 
+#     LaunchTemplateName: !Sub ${AWS::StackName}-launch-template
+#     LaunchTemplateData:
+#       ImageId: !Ref LatestAmiId
+#       InstanceType: !Ref InstanceType
+  WebAppLaunchConfig:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      UserData: 
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          apt-get update -y
+          apt-get install apache2 -y 
+          sysyemctl start apache2.service
+          cd /var/www/html
+          echo "The main server is up welcome" > index.html
+      ImageId: ami-0ac73f33a1888c64a
+      KeyName: udacity_key_pair
+      SecurityGroups:
+      - Ref: WebServerSecurityGroup
+      InstanceType: t2.micro
+      BlockDeviceMappings:
+      - DeviceName: "/dev/sdk"
+        Ebs: 
+          VolumeSize: '10'
+
 Outputs:
   VPC:
     Description: A Reference to the created VPC
@@ -211,3 +305,5 @@ Outputs:
     Value: !Ref privatesubnet2
     Export:
       Name: privatesubnet2
+
+

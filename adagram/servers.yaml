@@ -1,12 +1,12 @@
 Description:
   Alayande Mustapha | CF project
-Parameters:
+  #Parameters:
   # EnvironmentName: 
   #   Description: An Environment name to be prefixed to the resources
   #   Type: String 
-  Subnets:
-    Type: 'List<AWS::EC2::Subnet::Id>'
-    Description: A list of subnets for the Autoscaler
+  #Subnets:
+  #  Type: 'List<AWS::EC2::Subnet::Id>'
+  #  Description: A list of subnets for the Autoscaler
 
 Resources:
   InstanceSecurityGroup:

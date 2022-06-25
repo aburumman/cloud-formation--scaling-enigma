@@ -178,8 +178,8 @@ Resources:
           CidrIp: 0.0.0.0/0
     # Tags: 
     #   - Tag
-      VpcId: 
-        vpc-0529fc9cbbcdfe12e
+      VpcId: !Ref myVPC
+        #vpc-0529fc9cbbcdfe12e
       # Fn::ImportValue:
       #   !Sub "${EnvironmentName}-VPCID"
       #Ref: myVPC
@@ -202,8 +202,8 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
-      VpcId: 
-        vpc-0529fc9cbbcdfe12e
+      VpcId: !Ref myVPC
+       # vpc-0529fc9cbbcdfe12e
         # Fn::ImportValue:
         #   !Sub "${EnvironmentName}-VPCID"
 

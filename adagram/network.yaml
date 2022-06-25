@@ -183,6 +183,23 @@ Resources:
       # Fn::ImportValue:
       #   !Sub "${EnvironmentName}-VPCID"
       #Ref: myVPC
+  LBSecGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Allow http to Load balancer
+      GroupName: LBSecGroup
+      SecurityGroupEgress: 
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      
+      SecurityGroupIngress: 
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      VpcId: !Ref myVPC
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties: 

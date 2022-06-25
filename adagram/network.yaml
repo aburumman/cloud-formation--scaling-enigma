@@ -211,7 +211,9 @@ Resources:
   WebAppGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
-      VPCZoneIdentifier: !Ref Subnets
+      VPCZoneIdentifier: #!Ref Subnets
+        - privatesubnet1
+        - privatesubnet2
       # - Fn::ImportValue:
       #     !Sub "${EnvironmentName}-PrivateNets"
       # LaunchTemplate:
@@ -253,6 +255,17 @@ Resources:
       - DeviceName: "/dev/sdk"
         Ebs: 
           VolumeSize: '10'
+  WebAppTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 10
+      HealthCheckPath: /
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 8
+      Port: 8080
+      Protocol: HTTP
+      UnhealthyThresholdCount: 5
+      VpcId: !Ref myVPC
 
 Outputs:
   VPC:

@@ -264,6 +264,17 @@ Resources:
         Ref: WebAppLB
       Port: '80'
       Protocol: HTTP
+  ALBListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+      - Type: forward
+        TargetGroupArn: !Ref WebAppTargetGroup
+      Conditions:
+      - Field: path-patterns
+        Values: [/]
+      ListenerArn: !Ref Listener
+      Priority: 1
 # myLaunchTemplate:
 #   Type: AWS::EC2::LaunchTemplate
 #   Properties: 

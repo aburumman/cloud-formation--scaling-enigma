@@ -290,7 +290,7 @@ Resources:
           #!/bin/bash
           apt-get update -y
           apt-get install apache2 -y 
-          sysyemctl start apache2.service
+          systemctl start apache2.service
           cd /var/www/html
           echo "The main server is up welcome" > index.html
       ImageId: ami-052efd3df9dad4825  #ami-0ac73f33a1888c64a

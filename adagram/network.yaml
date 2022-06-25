@@ -271,7 +271,7 @@ Resources:
       - Type: forward
         TargetGroupArn: !Ref WebAppTargetGroup
       Conditions:
-      - Field: path-patterns
+      - Field: path-pattern
         Values: [/]
       ListenerArn: !Ref Listener
       Priority: 1

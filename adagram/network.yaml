@@ -212,8 +212,8 @@ Resources:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       VPCZoneIdentifier: #!Ref Subnets
-        - privatesubnet1
-        - privatesubnet2
+        - !Ref privatesubnet1
+        - !Ref privatesubnet2
       # - Fn::ImportValue:
       #     !Sub "${EnvironmentName}-PrivateNets"
       # LaunchTemplate:
@@ -227,7 +227,26 @@ Resources:
       - Ref: WebAppTargetGroup
       HealthCheckGracePeriod: 60
       HealthCheckType: ELB
+  WebAppLB:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Subnets:
+      - !Ref publicSubnet1
+      - !Ref publicSubnet2
+      SecurityGroups:
+      - Ref: LBSecGroup
 
+  Listener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      DefaultActions:
+      - Type: forward
+        TargetGroupArn:
+          Ref: WebAppTargetGroup
+      LoadBalancerArn:
+        Ref: WebAppLB
+      Port: '80'
+      Protocol: HTTP
 # myLaunchTemplate:
 #   Type: AWS::EC2::LaunchTemplate
 #   Properties: 
@@ -246,7 +265,7 @@ Resources:
           sysyemctl start apache2.service
           cd /var/www/html
           echo "The main server is up welcome" > index.html
-      ImageId: ami-0ac73f33a1888c64a
+      ImageId: ami-052efd3df9dad4825  #ami-0ac73f33a1888c64a
       KeyName: udacity_key_pair
       SecurityGroups:
       - Ref: WebServerSecurityGroup

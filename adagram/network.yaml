@@ -138,13 +138,19 @@ Resources:
     Properties:
       RouteTableId: !Ref DefaultPrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref Natgateway2
+      NatGatewayId: !Ref Natgateway1
   
   PrivateSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties: 
       RouteTableId: !Ref PrivateRouteTable1
       SubnetId: !Ref privatesubnet1
+
+  PrivateSubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId: !Ref PrivateRouteTable2
+      SubnetId: !Ref privatesubnet2
 
   PrivateRouteTable2:
     Type: AWS::EC2::RouteTable
@@ -167,8 +173,8 @@ Resources:
       GroupName: InstanceSecurityGroup
       SecurityGroupEgress: 
         - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
+          FromPort: 0
+          ToPort: 65535
           CidrIp: 0.0.0.0/0
       
       SecurityGroupIngress: 
@@ -193,7 +199,6 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
-      
       SecurityGroupIngress: 
         - IpProtocol: tcp
           FromPort: 80
@@ -203,8 +208,8 @@ Resources:
   WebServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties: 
-      GroupDescription: Allow SSH and egress
-      GroupName: WebServerSecrityGroup
+      GroupDescription: Allow SSH, HTTP and egress
+      GroupName: WebServerSecurityGroup
       SecurityGroupEgress: 
         - IpProtocol: tcp
           FromPort: 0
@@ -215,9 +220,9 @@ Resources:
           FromPort: 22
           ToPort: 22
           CidrIp: 0.0.0.0/0
-        - IpProtocol: tcp 
-          FromPort: 22
-          ToPort: 22
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
           CidrIp: 0.0.0.0/0
       VpcId: !Ref myVPC
        # vpc-0529fc9cbbcdfe12e
@@ -227,7 +232,13 @@ Resources:
 
   WebAppGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
+    DependsOn:
+      - WebAppLaunchConfig
     Properties:
+      AutoScalingGroupName: WebAppGroup
+      AvailabilityZones:
+        - !Select [0, !GetAZs ""]
+        - !Select [1, !GetAZs ""]
       VPCZoneIdentifier: #!Ref Subnets
         - !Ref privatesubnet1
         - !Ref privatesubnet2
@@ -288,18 +299,10 @@ Resources:
       UserData: 
         Fn::Base64: !Sub |
           #!/bin/bash
-          apt-get update -y
-          apt-get install -y apt-transport-https ca-certificates curl
-          gnupg lsb-release
-          mkdir -p /etc/apt/keyrings
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-          echo \
-          "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-          $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-          apt-get update
-          apt-get install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
-          usermod -aG docker ubuntu
-          docker run -p 8080:8080 tomcat:8.0
+          sudo apt-get update -y
+          sudo apt-get install apache2 -y
+          sudo systemctl start apache2.service
+      LaunchConfigurationName: WebAppLaunchConfig    
       ImageId: ami-052efd3df9dad4825  #ami-0ac73f33a1888c64a
       KeyName: udacity_key_pair
       SecurityGroups:
